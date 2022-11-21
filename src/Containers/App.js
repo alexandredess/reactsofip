@@ -5,26 +5,25 @@ import React,{useState} from 'react';
 function App(){
 
   //State 
-  const [eleves]= useState(
+  const [eleves,setEleves]= useState([
 
     {
       nom:'Eva Dupont',
       moyenne:15,
       citation:"Aller toujours plus loin"
     },
-    {nom:'Pascal Obispo',
-     moyenne:5,
-     citation:"Le feu ça brûle"
+    {
+    nom:'Pascal Obispo',
+    moyenne:5,
+    citation:"Le feu ça brûle"
     }
-  );
+  ]);
 
     //Methodes
     const buttonClickedHandler= nouveauNom=>{
-      // const nouveauState =[...this.state.eleves];
-      // nouveauState[0].nom=nouveauNom
-      // this.setState({
-      //   ...this.state,
-      //   eleves:nouveauState
+      const nouveauxEleves =[...eleves];
+      nouveauxEleves[0].nom= nouveauNom;
+      setEleves(nouveauxEleves)
     }
 
     return(
@@ -34,7 +33,7 @@ function App(){
         </div>
         <div>
           
-          {/* <button onClick={buttonClickedHandler.bind(this,"Elon Musk")}>Transformer le premier Eleve</button> */}
+           <button onClick={buttonClickedHandler.bind(this,"Elon Musk")}>Transformer le premier Eleve</button> 
         </div>
         
 
