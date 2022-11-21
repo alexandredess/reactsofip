@@ -1,6 +1,6 @@
 import './App.css';
 import Eleve from '../Components/Eleves/Eleve';
-import React,{useState} from 'react';
+import React,{useState, useEffect} from 'react';
 
 function App(){
 
@@ -18,6 +18,15 @@ function App(){
     citation:"Le feu ça brûle"
     }
   ]);
+
+    //useEffects
+
+    
+    useEffect(()=>{
+      return()=>{
+        console.log('[App.js] UseEffect(willUnmount)');
+      }
+    },[])
 
     //Methodes
     const buttonClickedHandler= nouveauNom=>{
