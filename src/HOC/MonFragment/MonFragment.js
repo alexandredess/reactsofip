@@ -1,8 +1,3 @@
-//import
-import react from "react";
-
-function MonFragment(props){
-
-}
+const MonFragment = props =>props.children;
 
 export default MonFragment;

@@ -1,8 +1,9 @@
 import './App.css';
 import Eleve from '../Components/Eleves/Eleve';
-import React,{useState, useEffect} from 'react';
+import React,{useState, useEffect,useRef} from 'react';
 import styledComponent from 'styled-components';
 import MonFragment from '../HOC/MonFragment/MonFragment';
+import Search from '../Components/Search/Search'
 
 const MonBoutonStylise=styledComponent.button`
 //on y met le code CSS A l'intérieur
@@ -50,18 +51,19 @@ function App(){
     },[])
 
     //Methodes
-    const buttonClickedHandler= (nouveauNom,index)=>{
-      const nouveauxEleves =[...eleves];
-      nouveauxEleves[index].nom= nouveauNom;
-      setEleves(nouveauxEleves)
+    const buttonClickedHandler = (nouveauNom,index) => {
+      const nouveauxEleves = [...eleves];
+      nouveauxEleves[index].nom = nouveauNom;
+      setEleves(nouveauxEleves);
       setTransformation(true);
+      elementInput.current.focus();
     }
-    const buttonClickedOneHandler= (nouveauNom)=>{
-      const nouveauxEleves =[...eleves];
-      nouveauxEleves[0].nom= nouveauNom;
-      setEleves(nouveauxEleves)
-      setTransformation(true);
-    }
+    // const buttonClickedOneHandler= (nouveauNom)=>{
+    //   const nouveauxEleves =[...eleves];
+    //   nouveauxEleves[0].nom= nouveauNom;
+    //   setEleves(nouveauxEleves)
+    //   setTransformation(true);
+    // }
 
     const showHideClickHandler=()=>{
       //permet de passer en true et en false comme un toggle
@@ -85,17 +87,30 @@ function App(){
     setEleves(nouveauxEleves)
   }
 
-    let cartes = eleves.map((eleve,index)=>(
-      <Eleve
-      key={index}
-      nom={eleve.nom}
-      moyenne={eleve.moyenne}
-      clic={()=>buttonClickedHandler('Thomas Dutronc',index)}
-      supprimer={()=>removeClickhandler(index)}
-      changerNom={(e)=>nameChangeHandler(e,index)}>
-      {eleve.citation}
-      </Eleve>
-    ))
+  const elementInput = useRef(null);
+
+  let cartes = eleves.map((eleve,index)=>{
+    let maVariableRef=null
+    if(index === 0){
+      maVariableRef= elementInput;
+    }
+
+    return (
+        <Eleve
+        key={index}
+        nom={eleve.nom}
+        moyenne={eleve.moyenne}
+        
+        clic={() => buttonClickedHandler('Thomas Dutronc',index)}
+        supprimer={()=>removeClickhandler(index)}
+        changerNom={(e)=>nameChangeHandler(e,index)}
+        maRef={maVariableRef}
+        >
+        {eleve.citation}
+      
+        </Eleve>
+    );
+  });
 
     return(
         <MonFragment>
@@ -105,13 +120,15 @@ function App(){
             </div>
             <div>
             
-            <MonBoutonStylise transformed={transformation} onClick={buttonClickedOneHandler.bind(this,"Elon Musk")}>Transformer le premier Eleve</MonBoutonStylise> 
+            <MonBoutonStylise transformed={transformation} onClick={buttonClickedHandler.bind(this,"Elon Musk")}>Transformer le premier Eleve</MonBoutonStylise> 
           </div>
 
           <div>
             
             <MonBoutonStylise  onClick={showHideClickHandler}>Afficher/Masquer</MonBoutonStylise> 
           </div>
+
+          <Search/>
           
           {afficherEleve?
           <div>

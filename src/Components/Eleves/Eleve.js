@@ -49,7 +49,7 @@ function Eleve(props) {
             <p>Age:{Math.floor(Math.random()*100)}</p>
             <i>{props.citation}</i>
             {message}
-            <input onChange={props.changerNom} type="text" value={props.nom} style={{width:'100%'}}/>
+            <input ref={props.maRef} onChange={props.changerNom} type="text" value={props.nom} style={{width:'100%'}}/>
             <button onClick={props.supprimer} style={{marginTop:'5px'}}>Supprimer</button>
         </div>
     )
