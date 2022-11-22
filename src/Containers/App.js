@@ -2,6 +2,7 @@ import './App.css';
 import Eleve from '../Components/Eleves/Eleve';
 import React,{useState, useEffect} from 'react';
 import styledComponent from 'styled-components';
+import MonFragment from '../HOC/MonFragment/MonFragment';
 
 const MonBoutonStylise=styledComponent.button`
 //on y met le code CSS A l'intérieur
@@ -97,7 +98,7 @@ function App(){
     ))
 
     return(
-        <>
+        <MonFragment>
           <div className='app'>
             <div>
               <h1 style={h1Style}>Bienvenue dans la classe Terre</h1>
@@ -120,7 +121,7 @@ function App(){
           }
           
           </div>
-      </>
+      </MonFragment>
       
     )
 
