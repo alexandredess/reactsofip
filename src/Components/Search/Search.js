@@ -1,4 +1,5 @@
 import React, {Component} from 'react';
+import {themeContext} from '../../Context/theme-context';
 
 class Search extends Component{
 
@@ -13,6 +14,11 @@ class Search extends Component{
     componentDidMount(){
         this.searchRef.focus();
     }
+
+    //context
+
+    static contextType = themeContext;
+
     //JSX
     render(){
         return(
@@ -23,7 +29,9 @@ class Search extends Component{
                 width:'90%',
                 display: 'block',
                 margin: 'auto',
-                padding: '3px'
+                padding: '3px',
+                background: this.context.background,
+                color: this.context.foreground
             }}
                 />
         )

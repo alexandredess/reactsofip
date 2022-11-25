@@ -1,7 +1,8 @@
 //librairies
-import React, {useEffect} from 'react';
+import React, {useEffect, useContext} from 'react';
 //import CSS
 import classes from './Eleve.module.css';
+import {themeContext} from '../../Context/theme-context';
 
 function Eleve(props) {
     //useEffects
@@ -26,6 +27,8 @@ function Eleve(props) {
 
     //constantes
     const moyenneClasses=[];
+    const theme= useContext(themeContext);
+    let inputBackground;
 
     if(props.moyenne>10){
         moyenneClasses.push(classes.green)
@@ -43,13 +46,18 @@ function Eleve(props) {
     
     //JSX
     return(
-        <div className={classes.eleve}>
+        <div background={inputBackground} className={classes.eleve}>
             <h3 onClick={props.clic}>{props.nom}</h3>
             <p>Moyenne scolaire : <b className={moyenneClasses.join(' ')}>{props.moyenne}/20</b></p>
             <p>Age:{Math.floor(Math.random()*100)}</p>
             <i>{props.citation}</i>
             {message}
-            <input ref={props.maRef} onChange={props.changerNom} type="text" value={props.nom} style={{width:'100%'}}/>
+            <input ref={props.maRef} onChange={props.changerNom} type="text" value={props.nom} 
+            style={{
+                width:'100%',
+                background:theme.background,
+                color:theme.foreground
+                }}/>
             <button onClick={props.supprimer} style={{marginTop:'5px'}}>Supprimer</button>
         </div>
     )

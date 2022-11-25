@@ -1,0 +1,7 @@
+.listStyle{
+    list-style-type: none;
+    }
+.flex{
+    display:flex;
+    justify-content: space-around;
+}
