@@ -1,9 +1,10 @@
 import './Ecole.css';
 import Eleve from '../../Components/Eleves/Eleve';
-import React,{useState, useEffect,useRef} from 'react';
+import React,{useState, useEffect,useRef, createRef} from 'react';
 import styledComponent from 'styled-components';
 import Search from '../../Components/Search/Search';
 import ThemeContextProvider from '../../Context/theme-context';
+import API from "../Api/APIConnect"
 
 const MonBoutonStylise=styledComponent.button`
 //on y met le code CSS A l'intérieur
@@ -20,24 +21,10 @@ margin-bottom:10px;
 `;
 
 
-function App(){
+function Ecole(){
 
   //State 
-  const [eleves,setEleves]= useState([
-
-    {
-      id:1,
-      nom:'Eva Dupont',
-      moyenne:15,
-      citation:"Aller toujours plus loin"
-    },
-    {
-    id:2,
-    nom:'Pascal Obispo',
-    moyenne:5,
-    citation:"Le feu ça brûle"
-    }
-  ]);
+  const [eleves,setEleves]= useState([]);
 
   const [transformation,setTransformation]=useState(false);
   const[afficherEleve,setAfficherEleve]=useState(true);
@@ -50,13 +37,23 @@ function App(){
       }
     },[])
 
+    //Un useEffect on ymet tout le code que l'on veut et il se joue quand le composant est monté
+    useEffect(()=>{
+      buildEleves();//lance la fonction qui récupère les éléments de notre API
+    },[])
     //Methodes
     const buttonClickedHandler = (nouveauNom,index) => {
       const nouveauxEleves = [...eleves];
       nouveauxEleves[index].nom = nouveauNom;
       setEleves(nouveauxEleves);
       setTransformation(true);
-      elementInput.current.focus();
+      elementInputs[index].current.focus();//pour faire le focus
+    }
+
+    const buildEleves=()=>{
+      API.get('/eleves').then(res=>{
+        setEleves(res.data)
+      })
     }
     // const buttonClickedOneHandler= (nouveauNom)=>{
     //   const nouveauxEleves =[...eleves];
@@ -75,36 +72,35 @@ function App(){
       backgroundColor:'lightgreen'
     }
 
-    const removeClickhandler = index =>{
-    const nouveauxEleves=[...eleves];
-    nouveauxEleves.splice(index,1);
-    setEleves(nouveauxEleves);
+    const removeClickhandler = id =>{
+    API.delete('eleves/'+id).then(()=>{
+      buildEleves();
+      alert("Elève supprimé !!")
+    })
+  }
+  const elementInputs = useRef([]);
+  const nameChangeHandler = (id,index)=>{
+    API.put('/eleves/'+id,{
+      nom:elementInputs.current[index].current.value
+    })
+    buildEleves()
   }
 
-  const nameChangeHandler = (event,index)=>{
-    const nouveauxEleves=[...eleves];
-    nouveauxEleves[index].nom= event.target.value;
-    setEleves(nouveauxEleves)
-  }
-
-  const elementInput = useRef(null);
+   elementInputs.current = eleves.map((eleve,i)=>elementInputs.current[i]?? createRef());
 
   let cartes = eleves.map((eleve,index)=>{
-    let maVariableRef=null
-    if(index === 0){
-      maVariableRef= elementInput;
-    }
+
 
     return (
         <Eleve
-        key={index}
+        key={eleve.id}
         nom={eleve.nom}
         moyenne={eleve.moyenne}
         
         clic={() => buttonClickedHandler('Thomas Dutronc',index)}
-        supprimer={()=>removeClickhandler(index)}
-        changerNom={(e)=>nameChangeHandler(e,index)}
-        maRef={maVariableRef}
+        supprimer={()=>removeClickhandler(eleve.id)}//on utilise l'id pour la suppression de l'élève et non par l'index du tableau
+        changerNom={()=>nameChangeHandler(eleve.id,index)}
+        maRef={elementInputs.current[index]}
         >
         {eleve.citation}
       
@@ -144,4 +140,4 @@ function App(){
 
 }
 
-export default App;
+export default Ecole;
